@@ -351,19 +351,6 @@ def save_particle_metadata(particle_list, output_file='./data/particles/metadata
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
     with open(output_file, 'w') as f:
-
-def save_particle_metadata(particle_list, output_file='./data/particles/metadata.txt'):
-    """
-    Save metadata of generated particles to a text file.
-    
-    Parameters:
-    - particle_list: list of particle metadata dicts
-    - output_file: path to save metadata
-    """
-    import os
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    
-    with open(output_file, 'w') as f:
         f.write("Particle Generation Metadata\n")
         f.write("=" * 100 + "\n\n")
         f.write("Total particles: {}\n".format(len(particle_list)))
