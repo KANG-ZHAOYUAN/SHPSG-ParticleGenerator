@@ -152,6 +152,29 @@ The script automatically generates 50 particles with **stepped progression** fro
 | **3** | 30-39 | Ei~0.55, Fi~0.55 | D2_8~0.25 | D9_15~0.19 | 高度不规则，高粗糙度 |
 | **4** | 40-49 | Ei~0.4, Fi~0.4 | D2_8~0.30 | D9_15~0.25 | 极度奇怪，最大复杂度 |
 
+### Visual Progression: 5 Groups
+### 视觉进展：5 组
+
+**Group 0 (Regular)**  
+**第 0 组（常规）**
+![Particle 0000](examples/particle_0000.png)
+
+**Group 1 (Slightly Deformed)**  
+**第 1 组（轻微变形）**
+![Particle 0010](examples/particle_0010.png)
+
+**Group 2 (Moderately Strange)**  
+**第 2 组（中等奇怪）**
+![Particle 0020](examples/particle_0020.png)
+
+**Group 3 (Highly Irregular)**  
+**第 3 组（高度不规则）**
+![Particle 0030](examples/particle_0030.png)
+
+**Group 4 (Extremely Strange)**  
+**第 4 组（极度奇怪）**
+![Particle 0040](examples/particle_0040.png)
+
 ### Gradual Transition Mathematics
 ### 渐变过度数学
 
