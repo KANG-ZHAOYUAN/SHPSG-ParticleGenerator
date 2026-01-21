@@ -38,26 +38,79 @@ def generate_coeffs(Ei, Fi, D2_8, D9_15, max_degree=16, coeff_multiplier=1.0):
     return coeff
 
 
-def generate_random_particle_params(category='regular'):
+def generate_random_particle_params(category='regular', particle_index=None, total_particles=50):
     """
     Generate random morphological parameters for a unique particle.
     
     Parameters:
     - category: 'regular' (realistic rock-like) or 'weird' (extreme spikes/hollows)
+    - particle_index: if provided, enables gradual morphology transition (0-49)
+    - total_particles: total number of particles in batch
     
     Returns:
     - params: dict with keys Ei, Fi, D2_8, D9_15, D_eq, max_degree, coeff_multiplier, category
     """
-    if category == 'regular':
-        # Realistic rock-like particles with typical aspect ratios
+    # If particle_index is provided, use gradual transition mode
+    if particle_index is not None:
+        # Gradual transition from regular (k=0) to extremely weird (k=1)
+        # Divide 50 particles into 5 groups of 10
+        group = particle_index // 10  # 0-4
+        k = group / 4.0              # 0.0 to 1.0 (gradual factor)
+        
+        # Form parameters: transition from near-spherical (0.9) to strange (0.4)
+        ei_regular, ei_strange = 0.9, 0.4
+        fi_regular, fi_strange = 0.9, 0.4
+        
+        ei_value = ei_regular - k * (ei_regular - ei_strange)  # 0.9 ¡ú 0.4
+        fi_value = fi_regular - k * (fi_regular - fi_strange)  # 0.9 ¡ú 0.4
+        
+        # Add randomness within a shrinking range
+        ei_range = 0.15 * (1 - k)  # Range decreases with k
+        fi_range = 0.15 * (1 - k)
+        ei_value += np.random.uniform(-ei_range, ei_range)
+        fi_value += np.random.uniform(-fi_range, fi_range)
+        
+        # Roundness (D2_8): transition from 0.05 (smooth) to 0.4 (angular)
+        d2_8_base_min = 0.05
+        d2_8_base_max = 0.1
+        d2_8_value = d2_8_base_min + k * (d2_8_base_max * 3.0 - d2_8_base_min)
+        d2_8_value += np.random.uniform(-0.03, 0.03)  # Small random perturbation
+        
+        # Roughness (D9_15): transition from near-0 to 0.25
+        d9_15_base_min = 0.0
+        d9_15_base_max = 0.05
+        d9_15_value = d9_15_base_min + k * (d9_15_base_max * 5.0)
+        d9_15_value += np.random.uniform(-0.02, 0.02)  # Small random perturbation
+        
+        # max_degree: gradually increase from 8 to 16 for more complexity
+        max_degree_value = int(8 + k * 8)
+        
+        # coeff_multiplier: gradually increase from 1.0 to 1.5
+        coeff_mult_value = 1.0 + k * 0.5
+        
         params = {
-            'Ei': np.random.uniform(0.8, 1.0),      # More spherical to slightly elongated
-            'Fi': np.random.uniform(0.7, 0.95),     # Less flattened
-            'D2_8': np.random.uniform(0.0, 0.3),    # Moderate angularity
-            'D9_15': np.random.uniform(0.0, 0.1),   # Low to moderate roughness
+            'Ei': np.clip(ei_value, 0.3, 1.0),
+            'Fi': np.clip(fi_value, 0.3, 1.0),
+            'D2_8': np.clip(d2_8_value, 0.0, 0.4),
+            'D9_15': np.clip(d9_15_value, 0.0, 0.3),
+            'D_eq': np.random.uniform(30, 90),      # Size remains random
+            'max_degree': max_degree_value,
+            'coeff_multiplier': coeff_mult_value,
+            'category': 'gradual_' + str(group)
+        }
+        return params
+    
+    # Original behavior when no particle_index is provided
+    if category == 'regular':
+        # Irregular particles with "strange" morphology - enhanced angularity and roughness
+        params = {
+            'Ei': np.random.uniform(0.4, 0.7),      # Highly elongated (breaks spherical form)
+            'Fi': np.random.uniform(0.4, 0.7),      # Significantly flattened (breaks spherical form)
+            'D2_8': np.random.uniform(0.2, 0.45),   # Enhanced angularity with macroscopic features
+            'D9_15': np.random.uniform(0.08, 0.25), # Increased roughness for surface texture
             'D_eq': np.random.uniform(30, 90),      # Equivalent diameter: 30-90 micrometers
-            'max_degree': np.random.randint(8, 13), # SH degree: 8-12
-            'coeff_multiplier': 1.0,                # Standard coefficients
+            'max_degree': np.random.randint(12, 18),# Increased SH degree: 12-17 for more detail
+            'coeff_multiplier': 1.2,                # Slight amplification for more pronounced features
             'category': 'regular'
         }
     elif category == 'weird':
@@ -123,8 +176,8 @@ def batch_generate_particles(num_particles=50, output_dir='./data/particles',
         if verbose and (i + 1) % 10 == 0:
             print("Generating particle {}/{}...".format(i + 1, num_particles))
         
-        # Generate random parameters for this particle
-        params = generate_random_particle_params()
+        # Generate random parameters for this particle with gradual transition
+        params = generate_random_particle_params(particle_index=i, total_particles=num_particles)
         
         # Generate SH coefficients
         coeff = generate_coeffs(

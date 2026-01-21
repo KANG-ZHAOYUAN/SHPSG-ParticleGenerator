@@ -146,8 +146,8 @@ def enhanced_batch_generate_particles(num_particles, output_dir='./data/competit
             sys.stdout.write("\r" + progress_bar(i + 1, num_particles) + " ")
             sys.stdout.flush()
             
-            # Generate random parameters
-            params = generate_random_particle_params()
+            # Generate random parameters with gradual transition
+            params = generate_random_particle_params(particle_index=i, total_particles=num_particles)
             
             # Generate coefficients
             coeff = SHPSG(params['Ei'], params['Fi'], params['D2_8'], params['D9_15'])

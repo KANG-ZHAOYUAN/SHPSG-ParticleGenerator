@@ -44,9 +44,19 @@ Successfully modified the SHPSG (Spherical Harmonics Particle Shape Generator) l
 - **Features:**
   - Generates 50-100 unique particles per batch
   - Each particle has random, independent attributes
+  - **NEW: Gradual Morphology Transition** - Creates stepped progression from regular to extremely strange shapes
   - Pre-computes mesh geometry (efficient reuse)
   - Generates both STL (3D model) and PNG (visualization)
   - Saves comprehensive metadata
+  
+- **Gradual Transition Details:**
+  - Divides 50 particles into 5 groups of 10
+  - Group 0 (particles 0-9): k=0.0 (near-spherical form, smooth surface)
+  - Group 1 (particles 10-19): k=0.25 (slight deformation, moderate angularity)
+  - Group 2 (particles 20-29): k=0.5 (moderate flattening, increased roughness)
+  - Group 3 (particles 30-39): k=0.75 (high irregularity, high roughness)
+  - Group 4 (particles 40-49): k=1.0 (extremely strange, maximum roughness)
+  - Linear interpolation of parameters: Ei, Fi decrease from 0.9 to 0.4; D2_8, D9_15 increase
   
 - **Output Files:**
   - `particle_0000.stl` through `particle_0049.stl` (3D models)
@@ -141,10 +151,15 @@ All comprehensive tests passed ?
 
 - Average diameter: ~60 micrometers
 - D_eq range: 30-90 micrometers (uniform)
-- Ei average: ~0.8 (varied form)
-- Fi average: ~0.8 (varied shape)
-- D2_8 average: ~0.17 (varied angularity)
-- D9_15 average: ~0.08 (varied roughness)
+- **Ei average: ~0.656** (gradual from 0.9 to 0.4 across groups)
+- **Fi average: ~0.637** (gradual from 0.9 to 0.4 across groups)
+- **D2_8 average: ~0.171** (gradual from 0.05 to 0.3 across groups)
+- **D9_15 average: ~0.122** (gradual from 0.01 to 0.25 across groups)
+
+With gradual transition:
+- Group 0: Ei~0.9, Fi~0.9, D2_8~0.05, D9_15~0.01
+- Group 2 (middle): Ei~0.65, Fi~0.65, D2_8~0.18, D9_15~0.13
+- Group 4: Ei~0.4, Fi~0.4, D2_8~0.3, D9_15~0.25
 
 ## Performance
 

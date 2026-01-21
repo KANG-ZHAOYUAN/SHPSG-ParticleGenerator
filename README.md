@@ -1,78 +1,164 @@
-# Spherical Harmonics Particle Shape Generator - SHPSG
-> **声明**: 本项目参考了仓库 budizhao/SHPSG 的核心逻辑，在此基础上进行了用户友好的改进和优化。该仓库仅用于 2026年哈尔滨工业大学（深圳）弘理杯数学竞赛。
-> **Declaration**: This project references the core logic from [budizhao/SHPSG](https://github.com/budizhao/SHPSG) and has been enhanced with user-friendly improvements and optimizations. This repository is intended for use in the **2026 Harbin Institute of Technology (Shenzhen) Hongli Cup Mathematical Modeling Competition** only.
->
-> Please refer to [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) for the complete user guide.
+# SHPSG - Spherical Harmonics Particle Shape Generator
+
+> **For:** 2026 Harbin Institute of Technology (Shenzhen) Hongli Cup Mathematical Modeling Competition
+> 
+> **Base Project:** [budizhao/SHPSG](https://github.com/budizhao/SHPSG)
 
 ---
 
-##  Feature Overview
+## What This Tool Does
 
-### Core Features
+Generate highly realistic **irregular particles** for packing simulations.
 
-####  Spherical Harmonics Particle Generation
-- Generate highly realistic irregular particles using spherical harmonics expansion
-- Support extended to 16-degree spherical harmonics (SH degree 16), producing 256 coefficients
-- Generate high-fidelity 3D particle geometry
+### Three Core Capabilities
 
-####  Particle Size Control
-- Support particle equivalent diameter range: **30-90 micrometers**
-- Precise scale scaling suitable for cylindrical container (1000 micrometers diameter) packing simulation
-- Parameterized equivalent diameter (D_eq) control
+| Capability | Parameter | Range | Effect |
+|------------|-----------|-------|--------|
+| **1. Form Control** | Ei, Fi | 0.4-0.9 | Control particle elongation and flatness (create non-spherical shapes) |
+| **2. Roundness** | D2_8 | 0.0-0.35 | Generate angular features and macroscopic protrusions |
+| **3. Roughness** | D9_15 | 0.0-0.25 | Add surface texture and microscopic irregularities |
 
-####  Morphological Parameter Control
+### Additional Features
 
-| Parameter | Range | Description |
-|-----------|-------|-------------|
-| **Ei (Form)** | [0.6, 1.0] | b/a ratio, controls particle elongation |
-| **Fi (Roundness)** | [0.6, 1.0] | c/b ratio, controls particle flatness |
-| **D2_8 (Angularity)** | [0.0, 0.35] | Controls SH 2-8 degree coefficients, describes particle angularity |
-| **D9_15 (Roughness)** | [0.0, 0.15] | Controls SH 9-15 degree coefficients, describes particle surface roughness |
-
-####  Batch Generation System
-- **Standard Particle Generation**: Generate realistic rock-like particles (50-100 per batch)
-- **Mixed Morphology Generation**: Support multiple morphology categories
-  - Regular: Realistic rock shapes
-  - Elongated: High elongation ratio particles
-  - Flattened: High flatness ratio particles
-  - Angular: High angularity particles
-  - Rough: High surface roughness particles
-
-####  Output Formats
-- **3D Models (.stl)** - Importable to CAD and simulation software
-- **Visualizations (.png)** - Quick preview of particle shapes
-- **Metadata Files** - Record all particle parameters and statistics
-
-####  User Interface
-- **Interactive Script** (`run_competition_generation.py`) - Real-time parameter input and progress feedback
-- **Detailed Work Summary Report** - Generate statistics and file locations
-- **Complete Documentation** - Comprehensive guides and examples
-
-### Key Improvements
-
- Extended spherical harmonics degree (9 → 16), enhanced particle complexity  
- Added particle morphological parameterized control system  
- Implemented efficient batch generation workflow  
- Provided user-friendly interactive interface  
- Complete metadata and statistics reporting  
- STL and PNG dual format output support  
+- **Particle Size:** 30-90 micrometers
+- **Batch Generation:** 50 particles with automatic gradual transition (smooth → extreme)
+- **Output:** 3D models (.stl), visualizations (.png), metadata (txt)
+- **Gradual Progression:** 5 groups showing shape evolution from spherical to extremely strange
 
 ---
 
-##  Quick Start
+## Quick Start: 3 Steps
 
+### Step 1: Environment Setup
 ```bash
-# Run interactive particle generator
+# Ensure you have Python 3 with required packages
+pip install numpy scipy matplotlib
+```
+
+### Step 2: Run Generator
+```bash
+cd D:/HIT/Mathematical_Modeling/2026_Hong_Li/SHPSG
 python run_competition_generation.py
 ```
 
-See [QUICKSTART.md](QUICKSTART.md) for a 30-second quick start guide.
+### Step 3: Input Parameters
+```
+Enter number of particles to generate (default: 50):
+>> Press Enter to use default, or type a number
+```
+
+**That's it!** Generated files appear in `./data/competition_particles/`
 
 ---
 
-##  Documentation
+## Output Files
 
-- [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) - Complete user guide
-- [README_ENHANCEMENTS.md](README_ENHANCEMENTS.md) - Feature enhancements details
-- [README_MIXED_MORPHOLOGY.md](README_MIXED_MORPHOLOGY.md) - Mixed morphology generation guide
-- [QUICKSTART.md](QUICKSTART.md) - 30-second quick start
+For 50 particles:
+- `particle_0000.stl` to `particle_0049.stl` — 3D models for simulation
+- `particle_0000.png` to `particle_0049.png` — Visual previews
+- `metadata.txt` — All particle parameters and statistics
+
+---
+
+## Parameter Customization
+
+To customize morphology, edit the parameter ranges in `particle_generator.py`:
+
+```python
+# In generate_random_particle_params() function
+'Ei': np.random.uniform(0.4, 0.9),      # Change elongation range
+'Fi': np.random.uniform(0.4, 0.9),      # Change flatness range
+'D2_8': np.random.uniform(0.2, 0.45),   # Change angularity range
+'D9_15': np.random.uniform(0.08, 0.25), # Change roughness range
+```
+
+---
+
+## Advanced Usage
+
+### Generate Only STL (No PNG)
+```bash
+# Edit run_competition_generation.py, line ~280
+# Change: include_png=True to include_png=False
+python run_competition_generation.py
+```
+
+### Reproducible Results
+```python
+# Add at top of run_competition_generation.py
+import numpy as np
+np.random.seed(42)
+```
+
+### Single Particle
+```python
+from SHPSG import SHPSG
+from funcs import sh2stl, plotstl, icosahedron, subdivsurf, cleanmesh, car2sph
+
+# Setup geometry
+vertices, faces = icosahedron()
+for i in range(2):
+    vertices, faces = subdivsurf(faces, vertices)
+    vertices, faces = cleanmesh(faces, vertices)
+sph_cor = car2sph(vertices)
+
+# Create and save particle
+coeff = SHPSG(Ei=0.5, Fi=0.5, D2_8=0.3, D9_15=0.2)
+vertices_copy = vertices.copy()
+sh2stl(coeff, sph_cor, vertices_copy, faces, 'my_particle.stl', D_eq=60.0)
+plotstl('my_particle.stl', 'my_particle.png', D_eq=60.0)
+```
+
+---
+
+## Documentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** — 30-second quick start with example output
+- **[GRADUAL_TRANSITION_GUIDE.md](GRADUAL_TRANSITION_GUIDE.md)** — Detailed gradual morphology transition explanation
+- **[README_ENHANCEMENTS.md](README_ENHANCEMENTS.md)** — Complete enhancement technical details
+- **[INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py)** — Full interactive guide
+
+---
+
+## File Structure
+
+```
+SHPSG/
+├── run_competition_generation.py  (Main script - use this!)
+├── particle_generator.py          (Batch generation functions)
+├── SHPSG.py                       (Core algorithm)
+├── funcs.py                       (Utilities)
+├── main.ipynb                     (Jupyter notebook example)
+└── data/
+    └── competition_particles/     (Output folder)
+        ├── particle_*.stl
+        ├── particle_*.png
+        └── metadata.txt
+```
+
+---
+
+## Common Questions
+
+**Q: How long does it take to generate 50 particles?**  
+A: ~2-3 minutes (includes STL generation and PNG visualization)
+
+**Q: Can I change the number of particles?**  
+A: Yes! Enter a different number when prompted (or modify the script)
+
+**Q: What if I want only STL files without PNG?**  
+A: Edit `run_competition_generation.py` and set `include_png=False`
+
+**Q: How do I use these particles in simulation software?**  
+A: Import the .stl files directly into DEM software (Yade, LIGGGHTS, etc.)
+
+**Q: Can I fix a random seed for reproducibility?**  
+A: Yes! Add `np.random.seed(42)` before generation
+
+---
+
+## Support
+
+For technical implementation details, see [README_ENHANCEMENTS.md](README_ENHANCEMENTS.md).
+
+For complete API documentation, see [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py).

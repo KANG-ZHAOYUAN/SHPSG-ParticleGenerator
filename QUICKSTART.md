@@ -12,8 +12,19 @@ python run_competition_generation.py
 1. **Welcome Header** - Shows timestamp and container information
 2. **Input Prompt** - Enter desired particle count (default: 50)
 3. **Parameter Recipe** - View the parameter ranges being used
-4. **Real-Time Progress** - Watch as particles are generated
+4. **Real-Time Progress** - Watch as particles are generated with gradual morphology transition
 5. **Summary Report** - Complete statistics and file locations
+
+### Gradual Morphology Transition
+
+By default, the script generates 50 particles with an automatic **stepped progression**:
+- **Particles 1-10**: Regular shapes (near-spherical, smooth surfaces)
+- **Particles 11-20**: Slightly irregular (transitioning angularity)
+- **Particles 21-30**: Moderately strange (increased roughness)
+- **Particles 31-40**: Highly irregular (pronounced features)
+- **Particles 41-50**: Extremely strange (maximum complexity and roughness)
+
+This creates a natural progression from simple to complex shapes.
 
 ## Example Session
 
@@ -47,12 +58,12 @@ Generation Results:
   Success rate:             100.0%
 
 Batch Statistics:
-  Average particle size:    62.34 micrometers
-  Size range:               30.12 - 89.87 micrometers
-  Average elongation (Ei):  0.814
-  Average flatness (Fi):    0.795
-  Average angularity:       0.168
-  Average roughness:        0.072
+  Average particle size:    59.58 micrometers
+  Size range:               31.70 - 89.78 micrometers
+  Average elongation (Ei):  0.656 (gradual from ~0.9 to ~0.4)
+  Average flatness (Fi):    0.637 (gradual from ~0.9 to ~0.4)
+  Average angularity:       0.171 (gradual from ~0.05 to ~0.3)
+  Average roughness:        0.122 (gradual from ~0.01 to ~0.25)
 
 File Storage:
   Location: ./data/competition_particles
