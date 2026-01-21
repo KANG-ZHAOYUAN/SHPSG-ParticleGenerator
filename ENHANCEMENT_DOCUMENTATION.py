@@ -169,14 +169,7 @@ Usage:
 
 Output Structure:
     ./data/competition_particles/
-        ©À©¤©¤ particle_0000.stl        (3D model file)
-        ©À©¤©¤ particle_0000.png        (PNG visualization)
-        ©À©¤©¤ particle_0001.stl
-        ©À©¤©¤ particle_0001.png
-        ©À©¤©¤ ...
-        ©À©¤©¤ particle_0049.stl
-        ©À©¤©¤ particle_0049.png
-        ©¸©¤©¤ metadata.txt             (summary statistics)
+        
 
 Size and Diversity:
     - All particles between 30-90 micrometers
