@@ -6,21 +6,21 @@
 
 ---
 
-## ? Feature Overview
+##  Feature Overview
 
 ### Core Features
 
-#### ? Spherical Harmonics Particle Generation
+####  Spherical Harmonics Particle Generation
 - Generate highly realistic irregular particles using spherical harmonics expansion
 - Support extended to 16-degree spherical harmonics (SH degree 16), producing 256 coefficients
 - Generate high-fidelity 3D particle geometry
 
-#### ? Particle Size Control
+####  Particle Size Control
 - Support particle equivalent diameter range: **30-90 micrometers**
 - Precise scale scaling suitable for cylindrical container (1000 micrometers diameter) packing simulation
 - Parameterized equivalent diameter (D_eq) control
 
-#### ? Morphological Parameter Control
+####  Morphological Parameter Control
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
@@ -29,7 +29,7 @@
 | **D2_8 (Angularity)** | [0.0, 0.35] | Controls SH 2-8 degree coefficients, describes particle angularity |
 | **D9_15 (Roughness)** | [0.0, 0.15] | Controls SH 9-15 degree coefficients, describes particle surface roughness |
 
-#### ? Batch Generation System
+####  Batch Generation System
 - **Standard Particle Generation**: Generate realistic rock-like particles (50-100 per batch)
 - **Mixed Morphology Generation**: Support multiple morphology categories
   - Regular: Realistic rock shapes
@@ -38,28 +38,28 @@
   - Angular: High angularity particles
   - Rough: High surface roughness particles
 
-#### ? Output Formats
+####  Output Formats
 - **3D Models (.stl)** - Importable to CAD and simulation software
 - **Visualizations (.png)** - Quick preview of particle shapes
 - **Metadata Files** - Record all particle parameters and statistics
 
-#### ? User Interface
+####  User Interface
 - **Interactive Script** (`run_competition_generation.py`) - Real-time parameter input and progress feedback
 - **Detailed Work Summary Report** - Generate statistics and file locations
 - **Complete Documentation** - Comprehensive guides and examples
 
 ### Key Improvements
 
-? Extended spherical harmonics degree (9 ¡ú 16), enhanced particle complexity  
-? Added particle morphological parameterized control system  
-? Implemented efficient batch generation workflow  
-? Provided user-friendly interactive interface  
-? Complete metadata and statistics reporting  
-? STL and PNG dual format output support  
+ Extended spherical harmonics degree (9 ¡ú 16), enhanced particle complexity  
+ Added particle morphological parameterized control system  
+ Implemented efficient batch generation workflow  
+ Provided user-friendly interactive interface  
+ Complete metadata and statistics reporting  
+ STL and PNG dual format output support  
 
 ---
 
-## ? Quick Start
+##  Quick Start
 
 ```bash
 # Run interactive particle generator
@@ -70,7 +70,7 @@ See [QUICKSTART.md](QUICKSTART.md) for a 30-second quick start guide.
 
 ---
 
-## ? Documentation
+##  Documentation
 
 - [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) - Complete user guide
 - [README_ENHANCEMENTS.md](README_ENHANCEMENTS.md) - Feature enhancements details
