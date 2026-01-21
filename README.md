@@ -2,10 +2,9 @@
 # SHPSG - 球谐函数粒子形状生成器
 
 
-> **声明：** 本仓库仅用于2026 哈尔滨工业大学（深圳）理数学建模竞赛，基础项目是：[budizhao/SHPSG](https://github.com/budizhao/SHPSG)，非商业用途。
+> **声明：** 本仓库仅用于2026 哈尔滨工业大学（深圳）弘理杯数学建模竞赛，基础项目是：[budizhao/SHPSG](https://github.com/budizhao/SHPSG)，非商业用途。
 
-
-**Disclaimer:** This repository is solely for the 2026 Harbin Institute of Technology (Shenzhen) Mathematical Modeling Contest. The underlying project is [budizhao/SHPSG](https://github.com/budizhao/SHPSG), and it is for non-commercial use only.
+> **Disclaimer:** This repository is solely for the 2026 Harbin Institute of Technology (Shenzhen) Mathematical Modeling Contest. The underlying project is [budizhao/SHPSG](https://github.com/budizhao/SHPSG), and it is for non-commercial use only.
 ---
 
 ## What This Tool Does
@@ -58,10 +57,15 @@ pip install numpy scipy matplotlib
 
 ### Step 2: Run Generator
 ### 步骤 2：运行生成器
+
 ```bash
 cd D:/HIT/Mathematical_Modeling/2026_Hong_Li/SHPSG
 python run_competition_generation.py
 ```
+
+main.py comes from [budizhao/SHPSG](https://github.com/budizhao/SHPSG), which can be used to understand the logic of the code.
+
+main.py是来自[budizhao/SHPSG](https://github.com/budizhao/SHPSG)的，可以使用它来理解代码的逻辑。
 
 ### Step 3: Input Parameters
 ### 步骤 3：输入参数
