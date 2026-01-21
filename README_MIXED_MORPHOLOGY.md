@@ -1,84 +1,83 @@
-# 混合形态批量生成 - 完整指南
-# MIXED MORPHOLOGY BATCH GENERATION - COMPLETE GUIDE
+# Mixed Morphology Batch Generation - Complete Guide
 
-## ? 快速开始 (30 秒)
+## ? Quick Start (30 seconds)
 
 ```bash
-# 方式 1: 运行专用脚本 (推荐)
+# Method 1: Run dedicated script (recommended)
 python generate_mixed_batch.py
 
-# 方式 2: 直接运行 particle_generator.py
+# Method 2: Run particle_generator.py directly
 python particle_generator.py
 
-# 方式 3: Python 代码
+# Method 3: Python code
 python -c "from particle_generator import batch_generate_mixed_particles; batch_generate_mixed_particles()"
 ```
 
-**输出**: 50 个粒子 + 元数据保存在 `./Output_Batch/`
+**Output**: 50 particles + metadata saved in `./Output_Batch/`
 
 ---
 
-## ? 核心修改内容
+## ? Core Modifications
 
-### 1?? **修改文件: `particle_generator.py`**
+### 1?? **Modified File: `particle_generator.py`**
 
-#### 修改 1: 扩展 `generate_coeffs()` 函数
+#### Modification 1: Extend `generate_coeffs()` Function
 ```python
-# 旧版本
+# Old version
 def generate_coeffs(Ei, Fi, D2_8, D9_15):
     return SHPSG(Ei, Fi, D2_8, D9_15)
 
-# 新版本 ?
+# New version ?
 def generate_coeffs(Ei, Fi, D2_8, D9_15, max_degree=16, coeff_multiplier=1.0):
     coeff = SHPSG(Ei, Fi, D2_8, D9_15)
     if coeff_multiplier != 1.0:
-        coeff = coeff * coeff_multiplier  # 系数放大
+        coeff = coeff * coeff_multiplier  # Coefficient scaling
     return coeff
 ```
 
-#### 修改 2: 重构 `generate_random_particle_params()`
+#### Modification 2: Restructure `generate_random_particle_params()`
 ```python
-# 新增 category 参数来区分粒子类型
+# Add category parameter to distinguish particle types
 def generate_random_particle_params(category='regular'):
     if category == 'regular':
-        # 普通粒子: 现实的岩石形状
+        # Regular particles: realistic rock shape
         params = {
-            'Ei': np.random.uniform(0.8, 1.0),          # 接近球体
+            'Ei': np.random.uniform(0.8, 1.0),          # Near-spherical
             'Fi': np.random.uniform(0.7, 0.95),
-            'D2_8': np.random.uniform(0.0, 0.3),        # 中等棱角
+            'D2_8': np.random.uniform(0.0, 0.3),        # Medium angularity
             'D9_15': np.random.uniform(0.0, 0.1),
-            'max_degree': np.random.randint(8, 13),     # ? 低频
-            'coeff_multiplier': 1.0,                    # ? 标准系数
+            'max_degree': np.random.randint(8, 13),     # ? Low frequency
+            'coeff_multiplier': 1.0,                    # ? Standard coefficients
             'category': 'regular'
         }
     elif category == 'weird':
-        # 奇异粒子: 极端的尖刺和深凹
+        # Weird particles: extreme spikes and deep concavities
         params = {
-            'Ei': np.random.uniform(0.2, 0.5),          # 极度拉长
-            'Fi': np.random.uniform(0.1, 0.4),          # 极度扁平
-            'D2_8': np.random.uniform(0.2, 0.4),        # 高棱角
+            'Ei': np.random.uniform(0.2, 0.5),          # Extremely elongated
+            'Fi': np.random.uniform(0.1, 0.4),          # Extremely flattened
+            'D2_8': np.random.uniform(0.2, 0.4),        # High angularity
             'D9_15': np.random.uniform(0.1, 0.2),
-            'max_degree': np.random.randint(30, 51),    # ? 高频
-            'coeff_multiplier': np.random.uniform(5, 10), # ? 5-10倍放大
+            'max_degree': np.random.randint(30, 51),    # ? High frequency
+            'coeff_multiplier': np.random.uniform(5, 10), # ? 5-10x amplification
             'category': 'weird'
         }
     return params
 ```
 
-#### 修改 3: 新增混合批处理函数
+#### Modification 3: New Mixed Batch Processing Function
 ```python
-# ? 全新函数 - 一键生成混合批次
+# ? Completely new function - Generate mixed batch in one call
 def batch_generate_mixed_particles(output_dir='./Output_Batch', 
                                    regular_count=40, 
                                    weird_count=10,
                                    include_png=True, 
                                    verbose=True):
-    # 预计算网格几何 (重复使用)
+    # Precompute mesh geometry (for reuse)
     vertices, faces = icosahedron()  # ... mesh processing
     
     particle_list = []
     
-    # 生成普通粒子 (40 个)
+    # Generate regular particles (40)
     for i in range(regular_count):
         try:
             params = generate_regular_particle_params()
@@ -86,13 +85,13 @@ def batch_generate_mixed_particles(output_dir='./Output_Batch',
                 max_degree=params['max_degree'],
                 coeff_multiplier=params['coeff_multiplier']
             )
-            # 保存为 particle_reg_01.stl, particle_reg_02.stl, ...
+            # Save as particle_reg_01.stl, particle_reg_02.stl, ...
             sh2stl(coeff, ..., f"particle_reg_{i+1:02d}.stl")
         except Exception as e:
             print(f"ERROR: {e}")
-            continue  # ? 错误处理: 跳过继续
+            continue  # ? Error handling: skip and continue
     
-    # 生成奇异粒子 (10 个)
+    # Generate weird particles (10)
     for i in range(weird_count):
         try:
             params = generate_weird_particle_params()
@@ -100,116 +99,116 @@ def batch_generate_mixed_particles(output_dir='./Output_Batch',
                 max_degree=params['max_degree'],
                 coeff_multiplier=params['coeff_multiplier']
             )
-            # 保存为 particle_weird_01.stl, particle_weird_02.stl, ...
+            # Save as particle_weird_01.stl, particle_weird_02.stl, ...
             sh2stl(coeff, ..., f"particle_weird_{i+1:02d}.stl")
         except Exception as e:
             print(f"ERROR: {e}")
-            continue  # ? 错误处理
+            continue  # ? Error handling
     
     return particle_list
 ```
 
-#### 修改 4: 增强 `save_particle_metadata()`
+#### Modification 4: Enhanced `save_particle_metadata()`
 ```python
-# 新增分类统计和参数范围显示
-- 按 category ('regular' / 'weird') 分组
-- 显示 max_degree 和 coeff_multiplier 字段
-- 更详细的统计表格
+# Add category grouping and parameter range display
+- Group by category ('regular' / 'weird')
+- Display max_degree and coeff_multiplier fields
+- More detailed statistics table
 ```
 
 ---
 
-### 2?? **新增文件**
+### 2?? **New Files**
 
-| 文件 | 用途 | 说明 |
-|------|------|------|
-| `generate_mixed_batch.py` | 执行脚本 | 即插即用，直接运行 |
-| `MIXED_MORPHOLOGY_GUIDE.py` | 详细文档 | 技术细节、代码示例、流程图 |
-| `QUICK_REFERENCE.py` | 速查表 | 常用代码、FAQ、参数对比 |
-| `MODIFICATION_SUMMARY.py` | 本文件 | 修改总结、性能指标 |
+| File | Purpose | Description |
+|------|---------|-------------|
+| `generate_mixed_batch.py` | Execution script | Plug-and-play, run directly |
+| `MIXED_MORPHOLOGY_GUIDE.py` | Technical documentation | Details, code examples, flowcharts |
+| `QUICK_REFERENCE.py` | Quick reference | Common code, FAQ, parameter comparison |
+| `MODIFICATION_SUMMARY.py` | This file | Modification summary, performance metrics |
 
 ---
 
-## ? 参数配置对比
+## ? Parameter Configuration Comparison
 
 ```
-                    普通粒子 (Regular)      奇异粒子 (Weird)
+                    Regular Particles        Weird Particles
                     ─────────────────      ───────────────
-Ei (拉长指数)       0.8 ~ 1.0               0.2 ~ 0.5
-Fi (扁平指数)       0.7 ~ 0.95              0.1 ~ 0.4
-D2_8 (棱角度)       0.0 ~ 0.3               0.2 ~ 0.4
-D9_15 (粗糙度)      0.0 ~ 0.1               0.1 ~ 0.2
-SH 度数 (L)         8 ~ 12                  30 ~ 50 ? 高频
-系数倍数 (mult)     1.0x                    5 ~ 10x ? 放大
-比例                40 个 (80%)             10 个 (20%)
-文件名              particle_reg_NN         particle_weird_NN
-形状特征            现实岩石般              极端尖刺/深凹
+Ei (Elongation)     0.8 ~ 1.0               0.2 ~ 0.5
+Fi (Flatness)       0.7 ~ 0.95              0.1 ~ 0.4
+D2_8 (Angularity)   0.0 ~ 0.3               0.2 ~ 0.4
+D9_15 (Roughness)   0.0 ~ 0.1               0.1 ~ 0.2
+SH Degree (L)       8 ~ 12                  30 ~ 50 ? High frequency
+Coeff Multiplier    1.0x                    5 ~ 10x ? Amplification
+Proportion          40 (80%)                10 (20%)
+Filename            particle_reg_NN         particle_weird_NN
+Shape Feature       Realistic rock          Extreme spikes/concavities
 ─────────────────────────────────────────────────────────
 ```
 
 ---
 
-## ? 输出文件结构
+## ? Output File Structure
 
 ```
 ./Output_Batch/
-├── particle_reg_01.stl          ← 普通粒子 1 (3D 模型)
-├── particle_reg_01.png          ← 对应可视化
+├── particle_reg_01.stl          ← Regular particle 1 (3D model)
+├── particle_reg_01.png          ← Corresponding visualization
 ├── particle_reg_02.stl
 ├── particle_reg_02.png
 ├── ...
-├── particle_reg_40.stl          ← 普通粒子 40
+├── particle_reg_40.stl          ← Regular particle 40
 ├── particle_reg_40.png
-├── particle_weird_01.stl        ← 奇异粒子 1 (3D 模型)
-├── particle_weird_01.png        ← 对应可视化
+├── particle_weird_01.stl        ← Weird particle 1 (3D model)
+├── particle_weird_01.png        ← Corresponding visualization
 ├── particle_weird_02.stl
 ├── particle_weird_02.png
 ├── ...
-├── particle_weird_10.stl        ← 奇异粒子 10
+├── particle_weird_10.stl        ← Weird particle 10
 ├── particle_weird_10.png
-└── metadata.txt                 ← 统计数据
+└── metadata.txt                 ← Statistics data
 ```
 
 ---
 
-## ? 使用示例
+## ? Usage Examples
 
-### 示例 1: 默认参数
+### Example 1: Default Parameters
 ```python
 from particle_generator import batch_generate_mixed_particles, save_particle_metadata
 
-# 自动生成: 40 普通 + 10 奇异
+# Auto generate: 40 regular + 10 weird
 particles = batch_generate_mixed_particles()
 
-# 保存统计信息
+# Save statistics
 save_particle_metadata(particles, './Output_Batch/metadata.txt')
 ```
 
-### 示例 2: 自定义参数
+### Example 2: Custom Parameters
 ```python
-# 改为 50 普通 + 50 奇异粒子 (1:1 比例)
+# Change to 50 regular + 50 weird particles (1:1 ratio)
 particles = batch_generate_mixed_particles(
     output_dir='./Custom_Output',
     regular_count=50,
     weird_count=50,
-    include_png=False,  # 不生成 PNG，加快速度
+    include_png=False,  # No PNG to speed up
     verbose=True
 )
 ```
 
-### 示例 3: 生成单个粒子
+### Example 3: Generate Single Particle
 ```python
 from particle_generator import generate_regular_particle_params, generate_coeffs
 from funcs import icosahedron, subdivsurf, cleanmesh, car2sph, sh2stl
 
-# 设置网格
+# Setup mesh
 vertices, faces = icosahedron()
 for _ in range(2):
     vertices, faces = subdivsurf(faces, vertices)
     vertices, faces = cleanmesh(faces, vertices)
 sph_cor = car2sph(vertices)
 
-# 生成普通粒子
+# Generate regular particle
 params = generate_regular_particle_params()
 coeff = generate_coeffs(
     params['Ei'], params['Fi'], params['D2_8'], params['D9_15'],
@@ -222,71 +221,71 @@ sh2stl(coeff, sph_cor, vertices_copy, faces, 'my_particle.stl', D_eq=params['D_e
 
 ---
 
-## ?? 错误处理
+## ?? Error Handling
 
-代码内置 **try-except 块**，自动处理极端几何体生成错误：
+Code includes built-in **try-except blocks** that automatically handle extreme geometry generation errors:
 
 ```python
 try:
     params = generate_weird_particle_params()
     coeff = generate_coeffs(...)
-    sh2stl(...)  # 可能在这里失败
+    sh2stl(...)  # May fail here
 except Exception as e:
     if verbose:
         print(f"ERROR generating weird particle {i+1}: {str(e)}")
-    continue  # 跳过失败的粒子，继续处理下一个
+    continue  # Skip failed particle, continue processing next one
 ```
 
-? **即使某个粒子失败，整个批处理也不会中断**
+? **Even if a particle fails, the entire batch processing will not stop**
 
 ---
 
-## ?? 性能指标
+## ? Performance Metrics
 
-| 指标 | 数值 |
-|------|------|
-| 单个粒子 STL 生成 | ~0.1 秒 |
-| 单个粒子 PNG 生成 | ~2-3 秒 |
-| 单个粒子总耗时 | ~2.5 秒 |
-| 50 个粒子总耗时 | ~2-3 分钟 |
-| 内存使用 (峰值) | ~150 MB |
-| 磁盘占用 (50 粒子) | ~15 MB |
-
----
-
-## ? 详细文档
-
-- **`MIXED_MORPHOLOGY_GUIDE.py`**: 技术细节、参数范围、工作流程图、代码示例
-- **`QUICK_REFERENCE.py`**: 快速参考、常见问题、代码片段
-- **`ENHANCEMENT_DOCUMENTATION.py`**: 原始增强文档
+| Metric | Value |
+|--------|-------|
+| Single particle STL generation | ~0.1 seconds |
+| Single particle PNG generation | ~2-3 seconds |
+| Single particle total time | ~2.5 seconds |
+| 50 particles total time | ~2-3 minutes |
+| Memory usage (peak) | ~150 MB |
+| Disk usage (50 particles) | ~15 MB |
 
 ---
 
-## ? 验证清单
+## ? Detailed Documentation
 
-运行后检查:
-
-- [x] 输出文件夹 `./Output_Batch/` 已创建
-- [x] 40 个 `particle_reg_NN.stl` 文件生成
-- [x] 10 个 `particle_weird_NN.stl` 文件生成
-- [x] 每个 STL 都有对应的 PNG 可视化
-- [x] `metadata.txt` 包含所有参数
-- [x] 统计显示: 40 普通 + 10 奇异 = 50 总数
-- [x] 参数范围符合预期
-- [x] 没有未处理的错误
+- **`MIXED_MORPHOLOGY_GUIDE.py`**: Technical details, parameter ranges, workflow diagrams, code examples
+- **`QUICK_REFERENCE.py`**: Quick reference, FAQ, code snippets
+- **`ENHANCEMENT_DOCUMENTATION.py`**: Original enhancement documentation
 
 ---
 
-## ? 立即开始
+## ? Verification Checklist
+
+After running, check:
+
+- [x] Output folder `./Output_Batch/` created
+- [x] 40 `particle_reg_NN.stl` files generated
+- [x] 10 `particle_weird_NN.stl` files generated
+- [x] Each STL has corresponding PNG visualization
+- [x] `metadata.txt` contains all parameters
+- [x] Statistics show: 40 regular + 10 weird = 50 total
+- [x] Parameter ranges match expectations
+- [x] No unhandled errors
+
+---
+
+## ? Get Started Now
 
 ```bash
-# 一键生成
+# One-click generation
 python generate_mixed_batch.py
 ```
 
-完成后查看 `./Output_Batch/` 文件夹即可！
+Check the `./Output_Batch/` folder after completion!
 
 ---
 
-**修改完成日期**: 2026-01-21  
-**总代码行数**: ~200 行核心逻辑 + ~400 行文档
+**Modification Date**: 2026-01-21  
+**Total Code Lines**: ~200 lines core logic + ~400 lines documentation
