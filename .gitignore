@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data files - Generated particles and test files
+data/*.png
+data/*.jpg
+data/*.jpeg
+data/*.gif
+data/test_interactive/*.png
+data/test_interactive/*.jpg
+
+# Optional: Keep the data structure but ignore generated files
+# Uncomment the line below if you want to ignore the entire data folder
+# data/
+
+# Keep metadata files but ignore generated particles
+!data/metadata.txt
+!data/test_interactive/test_metadata.txt

@@ -1,13 +1,13 @@
 import numpy as np
 from scipy.special import sph_harm
 
-# calcualte coordinates with SH expansion
+# calcualte coordinates with SH expansion (now supports up to degree 16)
 def sph2cart(coeff, phi, theta):
     x = 0
     y = 0
     z = 0
     index = 0
-    for n in range(9):
+    for n in range(16):  # Extended from 9 to 16 to support higher-order features
         order = [*range(-n,n+1)]
         for m in range(2*n+1):
             x += coeff[index,0]*sph_harm(order[m], n, theta, phi)
@@ -113,43 +113,87 @@ def cleanmesh(f,v):
 
 from stl import mesh
 from mpl_toolkits import mplot3d
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 
-def plotstl(stlpath,figpath):
+def plotstl(stlpath, figpath, D_eq=1.0):
+    """
+    Plot and save STL mesh as PNG.
+    
+    Parameters:
+    - stlpath: input STL file path
+    - figpath: output PNG file path
+    - D_eq: equivalent diameter (for setting appropriate axis limits)
+    """
     # create a new plot
-    fig = plt.figure(figsize=(3, 3), dpi=300)
-    ax = mplot3d.Axes3D(fig, proj_type ='ortho') 
-    plt.rc('font', size=6) 
+    fig = plt.figure(figsize=(8, 8), dpi=150, facecolor='white')
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_facecolor('#f0f0f0')  # light gray background
 
     # load STL files and add the vectors to the plot
     your_mesh = mesh.Mesh.from_file(stlpath)
-    surf = mplot3d.art3d.Poly3DCollection(your_mesh.vectors,linewidth=0.15,facecolors='grey', 
-                                          edgecolor = 'b', alpha=.8)
-    # set axis properties
+    
+    # Create 3D polygon collection with better visualization
+    surf = mplot3d.art3d.Poly3DCollection(your_mesh.vectors,
+                                          facecolors='#4a90e2', 
+                                          edgecolor='#1a1a1a',
+                                          alpha=0.9,
+                                          linewidth=0.1)
+    
+    # add collection to plot
     ax.add_collection3d(surf)
 
-    # set scale
-    ax.set_xlim([-0.6, 0.6])
-    ax.set_ylim([-0.6, 0.6])
-    ax.set_zlim([-0.6, 0.6])
-    ax.set_xticks(np.arange(-0.6, 0.601, step=0.3))
-    ax.set_yticks(np.arange(-0.6, 0.601, step=0.3))
-    ax.set_zticks(np.arange(-0.6, 0.601, step=0.3))
+    # Set axis limits based on equivalent diameter
+    # For a particle with diameter D_eq, set limits to ¡ÀD_eq/2 with 20% margin
+    margin = D_eq * 0.6
+    ax.set_xlim([-margin, margin])
+    ax.set_ylim([-margin, margin])
+    ax.set_zlim([-margin, margin])
+    
+    # Set ticks
+    tick_step = margin / 3
+    ax.set_xticks(np.arange(-margin, margin + 0.1, step=tick_step))
+    ax.set_yticks(np.arange(-margin, margin + 0.1, step=tick_step))
+    ax.set_zticks(np.arange(-margin, margin + 0.1, step=tick_step))
+    
+    # Set better viewing angle
+    ax.view_init(elev=20, azim=45)
+    
+    # Remove axis labels for cleaner look
+    ax.set_xlabel('')
+    ax.set_ylabel('')
+    ax.set_zlabel('')
 
-    # Show the plot to the screen
-    plt.show()
+    # Save figure directly without showing
+    fig.savefig(figpath, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close(fig)
 
-    fig.savefig(figpath,dpi = 300, bbox_inches='tight')
-
-def sh2stl(coeff, sph_cor, vertices, faces,stlpath):
-    # update vertices by SH expansion
+def sh2stl(coeff, sph_cor, vertices, faces, stlpath, D_eq=1.0):
+    """
+    Convert spherical harmonics coefficients to STL mesh.
+    
+    Parameters:
+    - coeff: SH coefficients (256x3 complex array)
+    - sph_cor: spherical coordinates
+    - vertices: mesh vertices
+    - faces: mesh faces
+    - stlpath: output file path
+    - D_eq: equivalent diameter for scaling (in micrometers), default 1.0
+    """
+    # Calculate scale factor from equivalent diameter (D_eq/2 = radius)
+    scale_factor = D_eq / 2.0
+    
+    # Update vertices by SH expansion and apply scaling
+    vertices_copy = vertices.copy()
     for i in range(3):
-        vertices[:,i] = sph2cart(coeff,sph_cor[:,4],sph_cor[:,5])[i]
+        vertices_copy[:,i] = sph2cart(coeff, sph_cor[:,4], sph_cor[:,5])[i] * scale_factor
 
     # Create the mesh
     cube = mesh.Mesh(np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype))
     for i, f in enumerate(faces):
         for j in range(3):
-            cube.vectors[i][j] = vertices[f[j],:]
-    # Write the mesh to file "cube.stl"
+            cube.vectors[i][j] = vertices_copy[f[j],:]
+    
+    # Write the mesh to file
     cube.save(stlpath)
