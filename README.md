@@ -1,81 +1,78 @@
 # Spherical Harmonics Particle Shape Generator - SHPSG
-
-> **声明 / Declaration**: 本项目参考了仓库 [budizhao/SHPSG](https://github.com/budizhao/SHPSG) 的核心逻辑，在此基础上进行了用户友好的改进和优化。该仓库仅用于 **2026年哈尔滨工业大学（深圳）弘理杯数学竞赛**。
+> **声明**: 本项目参考了仓库 budizhao/SHPSG 的核心逻辑，在此基础上进行了用户友好的改进和优化。该仓库仅用于 2026年哈尔滨工业大学（深圳）弘理杯数学竞赛。
+> **Declaration**: This project references the core logic from [budizhao/SHPSG](https://github.com/budizhao/SHPSG) and has been enhanced with user-friendly improvements and optimizations. This repository is intended for use in the **2026 Harbin Institute of Technology (Shenzhen) Hongli Cup Mathematical Modeling Competition** only.
 >
-> This project references the core logic from [budizhao/SHPSG](https://github.com/budizhao/SHPSG) and has been enhanced with user-friendly improvements and optimizations. This repository is intended for use in the **2026 Harbin Institute of Technology (Shenzhen) Hongli Cup Mathematical Modeling Competition** only.
-
-
-> 可阅读INTERACTIVE_USER_GUIDE，获得用户指南。
+> Please refer to [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) for the complete user guide.
 
 ---
 
-## ? 功能介绍 / Feature Overview
+## ? Feature Overview
 
-### 核心功能 (Core Features)
+### Core Features
 
-#### ? 球谐函数粒子生成
-- 使用球谐函数展开式生成高度逼真的不规则粒子
-- 支持扩展到16阶球谐展开 (SH degree 16)，产生256个系数
-- 生成高保真的粒子3D几何形状
+#### ? Spherical Harmonics Particle Generation
+- Generate highly realistic irregular particles using spherical harmonics expansion
+- Support extended to 16-degree spherical harmonics (SH degree 16), producing 256 coefficients
+- Generate high-fidelity 3D particle geometry
 
-#### ? 粒子尺寸控制
-- 支持粒子等效直径范围：**30-90微米**
-- 精确的尺度缩放，适合圆形容器（1000微米直径）堆积模拟
-- 参数化等效直径 (D_eq) 控制
+#### ? Particle Size Control
+- Support particle equivalent diameter range: **30-90 micrometers**
+- Precise scale scaling suitable for cylindrical container (1000 micrometers diameter) packing simulation
+- Parameterized equivalent diameter (D_eq) control
 
-#### ? 形态学参数控制
+#### ? Morphological Parameter Control
 
-| 参数 | 中文名称 | 范围 | 描述 |
-|------|---------|------|------|
-| **Ei (Form)** | 伸长率 | [0.6, 1.0] | b/a 比值，控制粒子的伸长程度 |
-| **Fi (Roundness)** | 扁平率 | [0.6, 1.0] | c/b 比值，控制粒子的扁平程度 |
-| **D2_8 (Angularity)** | 棱角度 | [0.0, 0.35] | 控制SH 2-8阶系数，描述粒子棱角 |
-| **D9_15 (Roughness)** | 粗糙度 | [0.0, 0.15] | 控制SH 9-15阶系数，描述粒子表面粗糙度 |
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| **Ei (Form)** | [0.6, 1.0] | b/a ratio, controls particle elongation |
+| **Fi (Roundness)** | [0.6, 1.0] | c/b ratio, controls particle flatness |
+| **D2_8 (Angularity)** | [0.0, 0.35] | Controls SH 2-8 degree coefficients, describes particle angularity |
+| **D9_15 (Roughness)** | [0.0, 0.15] | Controls SH 9-15 degree coefficients, describes particle surface roughness |
 
-#### ? 批量生成系统
-- **标准粒子生成**：生成形状逼真的岩石状粒子 (50-100个/批)
-- **混合形态生成**：支持多种形态类别
-  - Regular（常规）：现实的岩石形状
-  - Elongated（细长）：高伸长率粒子
-  - Flattened（扁平）：高扁平率粒子
-  - Angular（棱角）：高棱角度粒子
-  - Rough（粗糙）：高表面粗糙度粒子
+#### ? Batch Generation System
+- **Standard Particle Generation**: Generate realistic rock-like particles (50-100 per batch)
+- **Mixed Morphology Generation**: Support multiple morphology categories
+  - Regular: Realistic rock shapes
+  - Elongated: High elongation ratio particles
+  - Flattened: High flatness ratio particles
+  - Angular: High angularity particles
+  - Rough: High surface roughness particles
 
-#### ? 输出格式
-- **3D模型 (.stl)** - 可导入CAD和仿真软件
-- **可视化 (.png)** - 快速预览粒子形状
-- **元数据文件** - 记录所有粒子参数和统计信息
+#### ? Output Formats
+- **3D Models (.stl)** - Importable to CAD and simulation software
+- **Visualizations (.png)** - Quick preview of particle shapes
+- **Metadata Files** - Record all particle parameters and statistics
 
-#### ? 用户交互界面
-- **交互式脚本** (`run_competition_generation.py`) - 实时参数输入和进度反馈
-- **详细的工作总结报告** - 生成统计数据和文件位置
-- **中英文支持** - 完整的中英文文档和指南
+#### ? User Interface
+- **Interactive Script** (`run_competition_generation.py`) - Real-time parameter input and progress feedback
+- **Detailed Work Summary Report** - Generate statistics and file locations
+- **Complete Documentation** - Comprehensive guides and examples
 
-### 主要改进 (Key Improvements)
+### Key Improvements
 
-? 扩展球谐函数阶数 (9 → 16)，增强粒子复杂度  
-? 添加粒子形态学参数化控制系统  
-? 实现高效的批量生成流程  
-? 提供友好的用户交互界面  
-? 完整的元数据和统计报告  
-? STL和PNG双格式输出支持  
+? Extended spherical harmonics degree (9 → 16), enhanced particle complexity  
+? Added particle morphological parameterized control system  
+? Implemented efficient batch generation workflow  
+? Provided user-friendly interactive interface  
+? Complete metadata and statistics reporting  
+? STL and PNG dual format output support  
 
 ---
 
-## ? 快速开始 (Quick Start)
+## ? Quick Start
 
 ```bash
-# 运行交互式粒子生成器
+# Run interactive particle generator
 python run_competition_generation.py
 ```
 
-详见 [QUICKSTART.md](QUICKSTART.md) 获得30秒快速指南。
+See [QUICKSTART.md](QUICKSTART.md) for a 30-second quick start guide.
 
 ---
 
-## ? 文档 (Documentation)
+## ? Documentation
 
-- [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) - 完整用户指南
-- [README_ENHANCEMENTS.md](README_ENHANCEMENTS.md) - 功能增强详解
-- [README_MIXED_MORPHOLOGY.md](README_MIXED_MORPHOLOGY.md) - 混合形态生成指南
-- [QUICKSTART.md](QUICKSTART.md) - 30秒快速开始
+- [INTERACTIVE_USER_GUIDE.py](INTERACTIVE_USER_GUIDE.py) - Complete user guide
+- [README_ENHANCEMENTS.md](README_ENHANCEMENTS.md) - Feature enhancements details
+- [README_MIXED_MORPHOLOGY.md](README_MIXED_MORPHOLOGY.md) - Mixed morphology generation guide
+- [QUICKSTART.md](QUICKSTART.md) - 30-second quick start
