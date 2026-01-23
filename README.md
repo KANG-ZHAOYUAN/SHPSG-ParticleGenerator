@@ -1,5 +1,5 @@
-# SHPSG - Spherical Harmonics Particle Shape Generator
-# SHPSG - 球谐函数粒子形状生成器
+# SHPSG - Particle shape generator based on spherical harmonic functionr
+# SHPSG - 基于球谐函数的粒子形状生成器
 
 
 > **声明：** 本仓库仅用于2026 哈尔滨工业大学（深圳）弘理杯数学建模竞赛，基础项目是：[budizhao/SHPSG](https://github.com/budizhao/SHPSG)，非商业用途。
@@ -136,19 +136,19 @@ The script automatically generates 50 particles with **stepped progression** fro
 
 | Group | Particles | Form | Angularity | Roughness | Description |
 |-------|-----------|------|-----------|-----------|-------------|
-| **0** | 0-9 | Ei~0.9 , Fi~0.9 | D2_8~0.05 | D9_15~0.01 | Near-spherical, smooth surface |
-| **1** | 10-19 | Ei~0.75 , Fi~0.75 | D2_8~0.12 | D9_15~0.07 | Slightly deformed, moderate angularity |
-| **2** | 20-29 | Ei~0.65 , Fi~0.65 | D2_8~0.18 | D9_15~0.13 | Moderately strange, increased roughness |
-| **3** | 30-39 | Ei~0.55 , Fi~0.55 | D2_8~0.25 | D9_15~0.19 | Highly irregular, high roughness |
-| **4** | 40-49 | Ei~0.4 , Fi~0.4 | D2_8~0.30 | D9_15~0.25 | Extremely strange, maximum complexity |
+| **0** | 0-9 | Ei\~0.9, Fi\~0.9 | D2_8\~0.05 | D9_15\~0.01 | Near-spherical, smooth surface |
+| **1** | 10-19 | Ei\~0.75, Fi\~0.75 | D2_8\~0.12 | D9_15\~0.07 | Slightly deformed, moderate angularity |
+| **2** | 20-29 | Ei\~0.65, Fi\~0.65 | D2_8\~0.18 | D9_15\~0.13 | Moderately strange, increased roughness |
+| **3** | 30-39 | Ei\~0.55, Fi\~0.55 | D2_8\~0.25 | D9_15\~0.19 | Highly irregular, high roughness |
+| **4** | 40-49 | Ei\~0.4, Fi\~0.4 | D2_8\~0.30 | D9_15\~0.25 | Extremely strange, maximum complexity |
 
 | 组 | 粒子 | 形态 | 棱角度 | 粗糙度 | 描述 |
 |----|------|------|---------|---------|------|
-| **0** | 0-9 | Ei~0.9 , Fi~0.9 | D2_8~0.05 | D9_15~0.01 | 近球形，光滑表面 |
-| **1** | 10-19 | Ei~0.75 , Fi~0.75 | D2_8~0.12 | D9_15~0.07 | 轻微变形，中等棱角 |
-| **2** | 20-29 | Ei~0.65 , Fi~0.65 | D2_8~0.18 | D9_15~0.13 | 中等奇怪，增加粗糙度 |
-| **3** | 30-39 | Ei~0.55 , Fi~0.55 | D2_8~0.25 | D9_15~0.19 | 高度不规则，高粗糙度 |
-| **4** | 40-49 | Ei~0.4 , Fi~0.4 | D2_8~0.30 | D9_15~0.25 | 极度奇怪，最大复杂度 |
+| **0** | 0-9 | Ei\~0.9, Fi\~0.9 | D2_8\~0.05 | D9_15\~0.01 | 近球形，光滑表面 |
+| **1** | 10-19 | Ei\~0.75, Fi\~0.75 | D2_8\~0.12 | D9_15\~0.07 | 轻微变形，中等棱角 |
+| **2** | 20-29 | Ei\~0.65, Fi\~0.65 | D2_8\~0.18 | D9_15\~0.13 | 中等奇怪，增加粗糙度 |
+| **3** | 30-39 | Ei\~0.55, Fi\~0.55 | D2_8\~0.25 | D9_15\~0.19 | 高度不规则，高粗糙度 |
+| **4** | 40-49 | Ei\~0.4, Fi\~0.4 | D2_8\~0.30 | D9_15\~0.25 | 极度奇怪，最大复杂度 |
 
 ### Visual Progression: 5 Groups
 ### 视觉进展：5 组
