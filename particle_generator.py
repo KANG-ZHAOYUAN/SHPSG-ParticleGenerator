@@ -53,8 +53,11 @@ def generate_random_particle_params(category='regular', particle_index=None, tot
     # If particle_index is provided, use gradual transition mode
     if particle_index is not None:
         # Gradual transition from regular (k=0) to extremely weird (k=1)
+        # With 50-particle cycle: resets every 50 particles
+        particle_index_in_cycle = particle_index % 50  # 0-49 repeating
+        
         # Divide 50 particles into 5 groups of 10
-        group = particle_index // 10  # 0-4
+        group = particle_index_in_cycle // 10  # 0-4
         k = group / 4.0              # 0.0 to 1.0 (gradual factor)
         
         # Form parameters: transition from near-spherical (0.9) to strange (0.4)
